@@ -11,9 +11,9 @@ defmodule Refraner.Scrapper do
     ?A..?Z
     |> Enum.take(1)
     |> Enum.map(fn letter ->
-         url = listado_url(letter)
-         @downloader.queue(:list, url)
-       end)
+      url = listado_url(letter)
+      @downloader.queue(:list, url)
+    end)
   end
 
   def scrap(:list, body, _) do
@@ -24,8 +24,8 @@ defmodule Refraner.Scrapper do
     |> Enum.map(&refran_url/1)
     |> Enum.take(1)
     |> Enum.each(fn url ->
-         @downloader.queue(:refran, url, :main)
-       end)
+      @downloader.queue(:refran, url, :main)
+    end)
   end
 
   def scrap(:refran, body, :main) do
@@ -33,7 +33,7 @@ defmodule Refraner.Scrapper do
     extract_and_save_refran_info(body, more_languages)
   end
 
-  def scrap(:refran, body, {:language, parent_id, language}) do
+  def scrap(:refran, body, {:language, _parent_id, language}) do
     extract_and_save_refran_info(body, [], language)
   end
 
@@ -52,8 +52,16 @@ defmodule Refraner.Scrapper do
     Logger.info("Refran information: #{inspect(refran)}")
 
     # Insert basic info and extract ID
+    %{id: refran_id} =
+      refran =
+      case Refraner.Repo.insert(refran) do
+        {:ok, refran} ->
+          refran
 
-    refran_id = 1
+        _ ->
+          Logger.error("Can't insert #{inspect(refran)}")
+          nil
+      end
 
     extras =
       more_info
@@ -65,6 +73,9 @@ defmodule Refraner.Scrapper do
     Logger.info("Extra refran information: #{inspect(extras)}")
 
     # Insert all the extra info
+    refran
+    |> Refraner.Model.Refran.changeset(extras)
+    |> Refraner.Repo.update()
 
     # Queue all the other languages
     Logger.info("Queueing #{length(other_languages)} languages")
@@ -184,8 +195,8 @@ defmodule Refraner.Scrapper do
     |> Stream.map(&childs/1)
     |> Stream.filter(fn [{_, _, [text]} | _] -> text =~ match end)
     |> Enum.map(fn [_ | data] ->
-         html_text(data)
-       end)
+      html_text(data)
+    end)
   end
 
   defp childs({_, _, data}), do: data
