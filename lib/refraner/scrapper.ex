@@ -9,7 +9,6 @@ defmodule Refraner.Scrapper do
 
   def main() do
     ?A..?Z
-    |> Enum.take(1)
     |> Enum.map(fn letter ->
       url = listado_url(letter)
       @downloader.queue(:list, url)
@@ -22,14 +21,13 @@ defmodule Refraner.Scrapper do
     |> Enum.map(&Refraner.extract_endpoint/1)
     |> Enum.filter(fn x -> not (x =~ "listado.aspx?letra=") end)
     |> Enum.map(&refran_url/1)
-    |> Enum.take(1)
     |> Enum.each(fn url ->
       @downloader.queue(:refran, url, :main)
     end)
   end
 
   def scrap(:refran, body, :main) do
-    more_languages = extract_more_languages(body) |> Enum.take(1)
+    more_languages = extract_more_languages(body)
     extract_and_save_refran_info(body, more_languages)
   end
 

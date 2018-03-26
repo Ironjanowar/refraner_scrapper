@@ -40,7 +40,7 @@ defmodule Refraner.Downloader do
     else
       _ ->
         Logger.warn("Error with url #{url} waiting 20 seconds...")
-        {:noreply, [{kind, url} | urls], @timeout_delay}
+        {:noreply, [{kind, url, info} | urls], @timeout_delay}
     end
   end
 end
