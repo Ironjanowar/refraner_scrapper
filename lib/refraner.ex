@@ -38,8 +38,8 @@ defmodule Refraner do
   def get_lis() do
     letters()
     |> Enum.map(fn letter ->
-      HTTPoison.get!(listado_url() <> letter).body
-    end)
+         HTTPoison.get!(listado_url() <> letter).body
+       end)
     |> Enum.map(fn x -> Floki.find(x, "li") end)
     |> List.flatten()
   end
@@ -47,8 +47,8 @@ defmodule Refraner do
   def get_as(lis) do
     lis
     |> Enum.map(fn {_, _, inner_tags} ->
-      Enum.find(inner_tags, fn {tag_name, _, _} -> tag_name == "a" end)
-    end)
+         Enum.find(inner_tags, fn {tag_name, _, _} -> tag_name == "a" end)
+       end)
   end
 
   def extract_endpoint({_, inner_tags, _}) do
@@ -133,9 +133,9 @@ defmodule Refraner do
     |> Enum.map(&extract_endpoint/1)
     |> Enum.filter(fn x -> not (x =~ "listado.aspx?letra=") end)
     |> Enum.each(fn endpoint ->
-      # Sleep 5 seconds
-      Process.sleep(5000)
-      get_refran_by_endpoint(endpoint)
-    end)
+         # Sleep 5 seconds
+         Process.sleep(5000)
+         get_refran_by_endpoint(endpoint)
+       end)
   end
 end

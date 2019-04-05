@@ -25,7 +25,7 @@ defmodule Refraner.Mixfile do
       {:httpoison, "~> 0.13"},
       {:floki, "~> 0.18.0"},
       {:ecto, "~> 2.0"},
-      {:mariaex, "~> 0.8.2"}
+      {:sqlite_ecto2, "~> 2.2"}
     ]
   end
 end

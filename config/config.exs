@@ -3,11 +3,8 @@
 use Mix.Config
 
 config :refraner, Refraner.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  database: "refraner_repo",
-  username: "refraner",
-  password: "refraner",
-  hostname: "localhost"
+  adapter: Sqlite.Ecto2,
+  database: "refraner.db"
 
 config :refraner, ecto_repos: [Refraner.Repo]
 

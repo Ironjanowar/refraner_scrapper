@@ -3,7 +3,8 @@ defmodule Refraner.Application do
 
   def start(_type, _args) do
     children = [
-      Refraner.Repo
+      Refraner.Repo,
+      Refraner.Downloader
     ]
 
     opts = [strategy: :one_for_one]
